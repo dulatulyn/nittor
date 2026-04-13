@@ -35,8 +35,19 @@ export class Home implements OnInit, OnDestroy {
         if (res.results.length) {
           this.heroMovies.set(res.results.slice(0, 5));
           this.trending.set(res.results.slice(0, 10));
+          this.topRated.set([...res.results].sort((a, b) => (b.imdb_rating ?? 0) - (a.imdb_rating ?? 0)).slice(0, 10));
         }
       },
+      error: () => {},
+    });
+
+    this.movieService.getMovies(undefined, 'action').subscribe({
+      next: (res) => { if (res.results.length) this.action.set(res.results); },
+      error: () => {},
+    });
+
+    this.movieService.getMovies(undefined, 'drama').subscribe({
+      next: (res) => { if (res.results.length) this.drama.set(res.results); },
       error: () => {},
     });
   }

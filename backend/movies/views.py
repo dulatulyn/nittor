@@ -21,6 +21,7 @@ from .serializers import (
     FavoriteCreateSerializer,
     FavoriteSerializer,
     ProfileSerializer,
+    UserReviewSerializer,
 )
 from .utils import create_access_token
 
@@ -320,4 +321,13 @@ class ProfileAPIView(APIView):
             'favorites_count': request.user.favorites.count(),
         }
         serializer = ProfileSerializer(data)
+        return Response(serializer.data)
+
+
+class UserReviewsAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        reviews = Review.objects.filter(user=request.user).select_related('movie')
+        serializer = UserReviewSerializer(reviews, many=True)
         return Response(serializer.data)

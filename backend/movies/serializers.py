@@ -151,3 +151,13 @@ class ProfileSerializer(serializers.Serializer):
     watched_count = serializers.IntegerField()
     reviews_count = serializers.IntegerField()
     favorites_count = serializers.IntegerField()
+
+
+class UserReviewSerializer(serializers.ModelSerializer):
+    movie_id = serializers.IntegerField(source='movie.id')
+    movie_title = serializers.CharField(source='movie.title')
+    poster_url = serializers.CharField(source='movie.poster_url')
+
+    class Meta:
+        model = Review
+        fields = ['id', 'movie_id', 'movie_title', 'poster_url', 'rating', 'text', 'created_at']

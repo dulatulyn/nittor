@@ -8,7 +8,6 @@ import { AuthService } from '../../core/services/auth.service';
 import { MovieRow } from '../../shared/components/movie-row/movie-row';
 import { User } from '../../models/user.model';
 import { Movie } from '../../models/movie.model';
-import MOCK from '../../data/mock-movies.json';
 
 @Component({
   selector: 'app-profile',
@@ -26,8 +25,8 @@ export class Profile implements OnInit {
   profile = signal<User | null>(null);
   activeTab = signal('watched');
 
-  watched = signal<Movie[]>(MOCK.slice(0, 8) as Movie[]);
-  favorites = signal<Movie[]>(MOCK.slice(4, 12) as Movie[]);
+  watched = signal<Movie[]>([]);
+  favorites = signal<Movie[]>([]);
   reviews = signal<any[]>([]);
 
   ngOnInit() {

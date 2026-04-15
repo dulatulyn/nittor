@@ -14,6 +14,7 @@ from .views import (
     FavoritesAPIView,
     FavoriteDeleteAPIView,
     ProfileAPIView,
+    UserReviewsAPIView,
 )
 
 urlpatterns = [
@@ -37,4 +38,5 @@ urlpatterns = [
     path('favorites/<int:movie_id>/', FavoriteDeleteAPIView.as_view()),
 
     path('profile/', ProfileAPIView.as_view()),
+    path('user-reviews/', UserReviewsAPIView.as_view()),
 ]

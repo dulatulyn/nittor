@@ -4,7 +4,6 @@ import { MovieService } from '../../core/services/movie.service';
 import { AuthService } from '../../core/services/auth.service';
 import { MovieRow } from '../../shared/components/movie-row/movie-row';
 import { Movie } from '../../models/movie.model';
-import MOCK from '../../data/mock-movies.json';
 
 @Component({
   selector: 'app-home',
@@ -16,11 +15,11 @@ export class Home implements OnInit, OnDestroy {
   private movieService = inject(MovieService);
   auth = inject(AuthService);
 
-  heroMovies = signal<Movie[]>(MOCK.slice(0, 5));
-  trending = signal<Movie[]>(MOCK.slice(0, 10));
-  topRated = signal<Movie[]>([...MOCK].sort((a, b) => b.imdb_rating - a.imdb_rating).slice(0, 10));
-  action = signal<Movie[]>(MOCK.filter((m) => m.genres.includes('Action')));
-  drama = signal<Movie[]>(MOCK.filter((m) => m.genres.includes('Drama')));
+  heroMovies = signal<Movie[]>([]);
+  trending = signal<Movie[]>([]);
+  topRated = signal<Movie[]>([]);
+  action = signal<Movie[]>([]);
+  drama = signal<Movie[]>([]);
 
   heroIndex = signal(0);
   private timer?: ReturnType<typeof setInterval>;

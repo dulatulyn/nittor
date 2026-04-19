@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import Genre, Movie, Review, WatchHistory, Favorite
+from .utils import hd_poster_url
 
 
 class RegisterSerializer(serializers.Serializer):
@@ -35,6 +36,7 @@ class GenreSerializer(serializers.ModelSerializer):
 
 class MovieListSerializer(serializers.ModelSerializer):
     genres = serializers.SlugRelatedField(many=True, read_only=True, slug_field='name')
+    poster_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Movie
@@ -49,10 +51,14 @@ class MovieListSerializer(serializers.ModelSerializer):
             'overview',
         ]
 
+    def get_poster_url(self, obj):
+        return hd_poster_url(obj.poster_url)
+
 
 class MovieDetailSerializer(serializers.ModelSerializer):
     genres = serializers.SlugRelatedField(many=True, read_only=True, slug_field='name')
     stars = serializers.SerializerMethodField()
+    poster_url = serializers.SerializerMethodField()
     avg_user_rating = serializers.ReadOnlyField()
     reviews_count = serializers.ReadOnlyField()
 
@@ -81,13 +87,20 @@ class MovieDetailSerializer(serializers.ModelSerializer):
     def get_stars(self, obj):
         return obj.stars_list
 
+    def get_poster_url(self, obj):
+        return hd_poster_url(obj.poster_url)
+
 
 class SimilarMovieSerializer(serializers.ModelSerializer):
     genres = serializers.SlugRelatedField(many=True, read_only=True, slug_field='name')
+    poster_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Movie
         fields = ['id', 'title', 'imdb_rating', 'poster_url', 'genres']
+
+    def get_poster_url(self, obj):
+        return hd_poster_url(obj.poster_url)
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -115,9 +128,14 @@ class ReviewCreateUpdateSerializer(serializers.ModelSerializer):
 
 
 class MovieMinimalSerializer(serializers.ModelSerializer):
+    poster_url = serializers.SerializerMethodField()
+
     class Meta:
         model = Movie
         fields = ['id', 'title', 'poster_url', 'imdb_rating']
+
+    def get_poster_url(self, obj):
+        return hd_poster_url(obj.poster_url)
 
 
 class WatchHistoryCreateSerializer(serializers.Serializer):
@@ -156,8 +174,11 @@ class ProfileSerializer(serializers.Serializer):
 class UserReviewSerializer(serializers.ModelSerializer):
     movie_id = serializers.IntegerField(source='movie.id')
     movie_title = serializers.CharField(source='movie.title')
-    poster_url = serializers.CharField(source='movie.poster_url')
+    poster_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Review
         fields = ['id', 'movie_id', 'movie_title', 'poster_url', 'rating', 'text', 'created_at']
+
+    def get_poster_url(self, obj):
+        return hd_poster_url(obj.movie.poster_url)
